@@ -7,6 +7,25 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  "/companies/{companyId}/invite-code/regenerate":
+    post:
+      tags:
+      - company-controller
+      operationId: regenerateInviteCode
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/UpdateCompanyResponse"
   "/companies/participate":
     post:
       tags:
@@ -108,8 +127,59 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/MemberResponse"
+  "/companies/{companyId}":
+    delete:
+      tags:
+      - company-controller
+      operationId: deleteCompany
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+      - company-controller
+      operationId: updateCompany
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateCompanyRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/UpdateCompanyResponse"
 components:
   schemas:
+    UpdateCompanyResponse:
+      type: object
+      properties:
+        companyId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        inviteCode:
+          type: string
     ParticipateCompanyRequest:
       required:
       - inviteCode
@@ -182,4 +252,11 @@ components:
       type: object
       properties:
         name:
+          type: string
+    UpdateCompanyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
           type: string
