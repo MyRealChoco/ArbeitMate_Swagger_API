@@ -7,6 +7,78 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  "/companies/{companyId}/workers/{companyMemberId}/roles":
+    post:
+      tags:
+      - company-controller
+      operationId: assignRoleToWorker
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyMemberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AssignRoleRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+  "/companies/{companyId}/roles":
+    get:
+      tags:
+      - company-controller
+      operationId: listRoles
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/CompanyRoleResponse"
+    post:
+      tags:
+      - company-controller
+      operationId: createRole
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateRoleRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/CompanyRoleResponse"
   "/companies/{companyId}/invite-code/regenerate":
     post:
       tags:
@@ -166,8 +238,73 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/UpdateCompanyResponse"
+  "/companies/{companyId}/workers":
+    get:
+      tags:
+      - company-controller
+      operationId: listWorkers
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/CompanyWorkerResponse"
+  "/companies/{companyId}/workers/{companyMemberId}":
+    delete:
+      tags:
+      - company-controller
+      operationId: removeWorker
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyMemberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
+    AssignRoleRequest:
+      required:
+      - roleId
+      type: object
+      properties:
+        roleId:
+          type: string
+          format: uuid
+    CreateRoleRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+    CompanyRoleResponse:
+      type: object
+      properties:
+        roleId:
+          type: string
+          format: uuid
+        name:
+          type: string
     UpdateCompanyResponse:
       type: object
       properties:
@@ -254,9 +391,29 @@ components:
         name:
           type: string
     UpdateCompanyRequest:
+      required:
+      - address
+      - name
       type: object
       properties:
         name:
           type: string
         address:
           type: string
+    CompanyWorkerResponse:
+      type: object
+      properties:
+        companyMemberId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        role:
+          type: string
+          enum:
+          - OWNER
+          - MANAGER
+          - WORKER
+        hourlyWage:
+          type: integer
+          format: int32
