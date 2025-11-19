@@ -284,12 +284,14 @@ components:
   schemas:
     AssignRoleRequest:
       required:
-      - roleId
+      - roleIds
       type: object
       properties:
-        roleId:
-          type: string
-          format: uuid
+        roleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
     CreateRoleRequest:
       required:
       - name
