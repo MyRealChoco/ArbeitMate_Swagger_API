@@ -34,6 +34,172 @@ paths:
       responses:
         '200':
           description: OK
+  "/companies/{companyId}/schedule/{periodId}/create/slots":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createSlots
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateScheduleSlotsRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/schedule/{periodId}/create-auto/staffing-templates":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createTemplateFromPeriod
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/StaffingTemplateResponse"
+  "/companies/{companyId}/schedule/{periodId}/apply-template/{templateId}":
+    post:
+      tags:
+      - schedule-controller
+      operationId: applyTemplateToPeriod
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/schedule/create/weekly":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createWeeklySchedule
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateWeeklyPeriodRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SchedulePeriodResponse"
+  "/companies/{companyId}/schedule/create/staffing-templates":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createStaffingTemplate
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateStaffingTemplateRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/StaffingTemplateResponse"
+  "/companies/{companyId}/schedule/create/monthly":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createMonthlySchedule
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateMonthlyPeriodRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SchedulePeriodResponse"
   "/companies/{companyId}/roles":
     get:
       tags:
@@ -259,6 +425,73 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/CompanyWorkerResponse"
+  "/companies/{companyId}/schedule/staffing-templates":
+    get:
+      tags:
+      - schedule-controller
+      operationId: listStaffingTemplates
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/StaffingTemplateResponse"
+  "/companies/{companyId}/schedule/periods/{periodId}":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getPeriodWithSlots
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SchedulePeriodWithSlotsResponse"
+  "/companies/{companyId}/schedule/periods-with-slots":
+    get:
+      tags:
+      - schedule-controller
+      operationId: listPeriodsWithSlots
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/SchedulePeriodWithSlotsResponse"
   "/companies/{companyId}/workers/{companyMemberId}":
     delete:
       tags:
@@ -280,6 +513,27 @@ paths:
       responses:
         '200':
           description: OK
+  "/companies/{companyId}/schedule/templates/{templateId}":
+    delete:
+      tags:
+      - schedule-controller
+      operationId: deleteTemplate
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     AssignRoleRequest:
@@ -292,6 +546,188 @@ components:
           items:
             type: string
             format: uuid
+    CreateScheduleSlotRequest:
+      required:
+      - endTime
+      - roleId
+      - startTime
+      - workDate
+      type: object
+      properties:
+        roleId:
+          type: string
+          format: uuid
+        workDate:
+          type: string
+          format: date
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        requiredHeadCount:
+          minimum: 1
+          type: integer
+          format: int32
+    CreateScheduleSlotsRequest:
+      required:
+      - slots
+      type: object
+      properties:
+        slots:
+          type: array
+          items:
+            "$ref": "#/components/schemas/CreateScheduleSlotRequest"
+    LocalTime:
+      type: string
+      example: "09:00:00"
+      pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$"
+    ScheduleSlotResponse:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+          format: uuid
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        workDate:
+          type: string
+          format: date
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        requiredHeadCount:
+          type: integer
+          format: int32
+    StaffingTemplateItemResponse:
+      type: object
+      properties:
+        dow:
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        requiredHeadCount:
+          type: integer
+          format: int32
+    StaffingTemplateResponse:
+      type: object
+      properties:
+        templateId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/StaffingTemplateItemResponse"
+    CreateWeeklyPeriodRequest:
+      required:
+      - availabilityDueAt
+      - baseDate
+      type: object
+      properties:
+        name:
+          type: string
+        baseDate:
+          type: string
+          format: date
+        availabilityDueAt:
+          type: string
+          format: date-time
+    SchedulePeriodResponse:
+      type: object
+      properties:
+        periodId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        periodType:
+          type: string
+          enum:
+          - WEEKLY
+          - MONTHLY
+          - CUSTOM
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - PUBLISHED
+        availabilityDueAt:
+          type: string
+          format: date-time
+    CreateStaffingTemplateItemRequest:
+      required:
+      - endTime
+      - roleId
+      - startTime
+      type: object
+      properties:
+        dow:
+          maximum: 6
+          minimum: 0
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        roleId:
+          type: string
+          format: uuid
+        requiredHeadCount:
+          minimum: 1
+          type: integer
+          format: int32
+    CreateStaffingTemplateRequest:
+      required:
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/CreateStaffingTemplateItemRequest"
+    CreateMonthlyPeriodRequest:
+      required:
+      - availabilityDueAt
+      type: object
+      properties:
+        name:
+          type: string
+        year:
+          minimum: 2025
+          type: integer
+          format: int32
+        month:
+          maximum: 12
+          minimum: 1
+          type: integer
+          format: int32
+        availabilityDueAt:
+          type: string
+          format: date-time
     CreateRoleRequest:
       required:
       - name
@@ -419,3 +855,32 @@ components:
         hourlyWage:
           type: integer
           format: int32
+    SchedulePeriodWithSlotsResponse:
+      type: object
+      properties:
+        periodId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        periodType:
+          type: string
+          enum:
+          - WEEKLY
+          - MONTHLY
+          - CUSTOM
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - PUBLISHED
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        slots:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ScheduleSlotResponse"
