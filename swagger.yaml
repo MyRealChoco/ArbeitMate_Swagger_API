@@ -34,6 +34,82 @@ paths:
       responses:
         '200':
           description: OK
+  "/companies/{companyId}/workers/fixed-shifts/{companyMemberId}":
+    get:
+      tags:
+      - fixed-shift-controller
+      operationId: getFixedShiftConfig
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyMemberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/FixedShiftResponse"
+    post:
+      tags:
+      - fixed-shift-controller
+      operationId: updateFixedShiftConfig
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyMemberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateFixedShiftRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/FixedShiftResponse"
+  "/companies/{companyId}/schedule/{periodId}/publish":
+    post:
+      tags:
+      - schedule-controller
+      operationId: publishSchedulePeriod
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
   "/companies/{companyId}/schedule/{periodId}/create/slots":
     post:
       tags:
@@ -92,6 +168,93 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/StaffingTemplateResponse"
+  "/companies/{companyId}/schedule/{periodId}/availability/submit":
+    post:
+      tags:
+      - schedule-controller
+      operationId: submitAvailability
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/SubmitAvailabilityRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+  "/companies/{companyId}/schedule/{periodId}/auto-assign":
+    post:
+      tags:
+      - schedule-controller
+      operationId: autoAssignSchedules
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ScheduleAssignmentSlotResponse"
+  "/companies/{companyId}/schedule/{periodId}/assignments":
+    post:
+      tags:
+      - schedule-controller
+      operationId: updateScheduleAssignments
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateScheduleAssignmentsRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ScheduleAssignmentSlotResponse"
   "/companies/{companyId}/schedule/{periodId}/apply-template/{templateId}":
     post:
       tags:
@@ -125,6 +288,45 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/schedule/worker/availability-pattern":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getMemberAvailabilityPattern
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/MemberAvailabilityResponse"
+    post:
+      tags:
+      - schedule-controller
+      operationId: updateMemberAvailabilityPattern
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateMemberAvailabilityRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
   "/companies/{companyId}/schedule/create/weekly":
     post:
       tags:
@@ -425,6 +627,79 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/CompanyWorkerResponse"
+  "/companies/{companyId}/workers/fixed-shifts":
+    get:
+      tags:
+      - fixed-shift-controller
+      operationId: getAllFixedShiftConfig
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/FixedShiftResponse"
+  "/companies/{companyId}/schedule/{periodId}/availability/submissions":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getSubmissionStatus
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/AvailabilitySubmissionStatusResponse"
+  "/companies/{companyId}/schedule/{periodId}/availability/slots":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getWorkerSlots
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/WorkerAvailabilitySlotsResponse"
   "/companies/{companyId}/schedule/staffing-templates":
     get:
       tags:
@@ -546,6 +821,86 @@ components:
           items:
             type: string
             format: uuid
+    FixedShiftItemRequest:
+      required:
+      - effectiveFrom
+      - endTime
+      - roleId
+      - startTime
+      type: object
+      properties:
+        roleId:
+          type: string
+          format: uuid
+        dow:
+          maximum: 6
+          minimum: 0
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+    LocalTime:
+      type: string
+      example: "09:00:00"
+      pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$"
+    UpdateFixedShiftRequest:
+      type: object
+      properties:
+        fixedShiftWorker:
+          type: boolean
+        shifts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/FixedShiftItemRequest"
+    FixedShiftItemResponse:
+      type: object
+      properties:
+        fixedShiftId:
+          type: string
+          format: uuid
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        dow:
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+    FixedShiftResponse:
+      type: object
+      properties:
+        companyMemberId:
+          type: string
+          format: uuid
+        memberId:
+          type: string
+          format: uuid
+        memberName:
+          type: string
+        fixedShiftWorker:
+          type: boolean
+        shifts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/FixedShiftItemResponse"
     CreateScheduleSlotRequest:
       required:
       - endTime
@@ -577,10 +932,6 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/CreateScheduleSlotRequest"
-    LocalTime:
-      type: string
-      example: "09:00:00"
-      pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$"
     ScheduleSlotResponse:
       type: object
       properties:
@@ -632,6 +983,99 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/StaffingTemplateItemResponse"
+    SubmitAvailabilityRequest:
+      type: object
+      properties:
+        slotIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+    ScheduleAssignmentSlotResponse:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+          format: uuid
+        workDate:
+          type: string
+          format: date
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        requiredHeadcount:
+          type: integer
+          format: int32
+        workers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ScheduleAssignmentWorkerResponse"
+    ScheduleAssignmentWorkerResponse:
+      type: object
+      properties:
+        memberId:
+          type: string
+          format: uuid
+        memberName:
+          type: string
+    Item:
+      required:
+      - memberIds
+      - scheduleId
+      type: object
+      properties:
+        scheduleId:
+          type: string
+          format: uuid
+        memberIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+    UpdateScheduleAssignmentsRequest:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Item"
+    MemberAvailabilityItemRequest:
+      required:
+      - effectiveFrom
+      - endTime
+      - startTime
+      type: object
+      properties:
+        dow:
+          maximum: 6
+          minimum: 0
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+    UpdateMemberAvailabilityRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/MemberAvailabilityItemRequest"
     CreateWeeklyPeriodRequest:
       required:
       - availabilityDueAt
@@ -855,6 +1299,89 @@ components:
         hourlyWage:
           type: integer
           format: int32
+    AvailabilitySubmissionStatusResponse:
+      type: object
+      properties:
+        companyMemberId:
+          type: string
+          format: uuid
+        memberId:
+          type: string
+          format: uuid
+        memberName:
+          type: string
+        submitted:
+          type: boolean
+        submittedAt:
+          type: string
+          format: date-time
+    WorkerAvailabilitySlotsResponse:
+      type: object
+      properties:
+        recommendedSlots:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WorkerSlotResponse"
+        otherSlots:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WorkerSlotResponse"
+    WorkerSlotResponse:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+          format: uuid
+        workDate:
+          type: string
+          format: date
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        recommended:
+          type: boolean
+        willing:
+          type: boolean
+    MemberAvailabilityItemResponse:
+      type: object
+      properties:
+        memberAvailabilityId:
+          type: string
+          format: uuid
+        dow:
+          type: integer
+          format: int32
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+    MemberAvailabilityResponse:
+      type: object
+      properties:
+        memberId:
+          type: string
+          format: uuid
+        companyId:
+          type: string
+          format: uuid
+        memberName:
+          type: string
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/MemberAvailabilityItemResponse"
     SchedulePeriodWithSlotsResponse:
       type: object
       properties:
