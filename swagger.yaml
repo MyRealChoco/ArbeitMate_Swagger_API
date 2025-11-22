@@ -1024,6 +1024,8 @@ components:
           format: uuid
         memberName:
           type: string
+        fixedShiftWorker:
+          type: boolean
     Item:
       required:
       - memberIds
