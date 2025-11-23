@@ -402,6 +402,31 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/SchedulePeriodResponse"
+  "/companies/{companyId}/schedule/create/custom":
+    post:
+      tags:
+      - schedule-controller
+      operationId: createCustomSchedule
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreatePeriodRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SchedulePeriodResponse"
   "/companies/{companyId}/roles":
     get:
       tags:
@@ -1171,6 +1196,24 @@ components:
           minimum: 1
           type: integer
           format: int32
+        availabilityDueAt:
+          type: string
+          format: date-time
+    CreatePeriodRequest:
+      required:
+      - availabilityDueAt
+      - endDate
+      - startDate
+      type: object
+      properties:
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
         availabilityDueAt:
           type: string
           format: date-time
