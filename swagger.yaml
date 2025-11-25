@@ -89,6 +89,126 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/FixedShiftResponse"
+  "/companies/{companyId}/swaps":
+    get:
+      tags:
+      - swap-request-controller
+      operationId: getCompanyRequests
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/SwapRequestResponse"
+    post:
+      tags:
+      - swap-request-controller
+      operationId: createRequest
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateSwapRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/companies/{companyId}/swaps/{requestId}/decline":
+    post:
+      tags:
+      - swap-request-controller
+      operationId: declineRequest
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/companies/{companyId}/swaps/{requestId}/approve":
+    post:
+      tags:
+      - swap-request-controller
+      operationId: approveRequest
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/companies/{companyId}/swaps/{requestId}/accept":
+    post:
+      tags:
+      - swap-request-controller
+      operationId: acceptRequest
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
   "/companies/{companyId}/schedule/{periodId}/publish":
     post:
       tags:
@@ -472,6 +592,51 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/CompanyRoleResponse"
+  "/companies/{companyId}/notices":
+    get:
+      tags:
+      - notice-controller
+      operationId: getCompanyNotices
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/NoticeResponse"
+    post:
+      tags:
+      - notice-controller
+      operationId: createNotice
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/NoticeRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
   "/companies/{companyId}/invite-code/regenerate":
     post:
       tags:
@@ -673,6 +838,27 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/FixedShiftResponse"
+  "/companies/{companyId}/swaps/my":
+    get:
+      tags:
+      - swap-request-controller
+      operationId: getMyRequests
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/SwapRequestResponse"
   "/companies/{companyId}/schedule/{periodId}/availability/submissions":
     get:
       tags:
@@ -792,6 +978,88 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/SchedulePeriodWithSlotsResponse"
+  "/companies/{companyId}/schedule/monthly":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getMonthlySchedules
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: year
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/notices/{noticeId}":
+    get:
+      tags:
+      - notice-controller
+      operationId: getNotice
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: noticeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/NoticeResponse"
+    delete:
+      tags:
+      - notice-controller
+      operationId: deleteNotice
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: noticeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
   "/companies/{companyId}/workers/{companyMemberId}":
     delete:
       tags:
@@ -926,6 +1194,25 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/FixedShiftItemResponse"
+    CreateSwapRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - GIVE_AWAY
+          - DIRECT_SWAP
+        fromAssignmentId:
+          type: string
+          format: uuid
+        toAssignmentId:
+          type: string
+          format: uuid
+        targetMemberId:
+          type: string
+          format: uuid
+        reason:
+          type: string
     CreateScheduleSlotRequest:
       required:
       - endTime
@@ -1232,6 +1519,13 @@ components:
           format: uuid
         name:
           type: string
+    NoticeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
     UpdateCompanyResponse:
       type: object
       properties:
@@ -1344,6 +1638,34 @@ components:
         hourlyWage:
           type: integer
           format: int32
+    SwapRequestResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        requesterName:
+          type: string
+        targetName:
+          type: string
+        type:
+          type: string
+          enum:
+          - GIVE_AWAY
+          - DIRECT_SWAP
+        status:
+          type: string
+          enum:
+          - OPEN
+          - ACCEPTED
+          - OWNER_APPROVAL
+          - APPROVED
+          - DECLINED
+          - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        fromScheduleInfo:
+          type: string
     AvailabilitySubmissionStatusResponse:
       type: object
       properties:
@@ -1456,3 +1778,17 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/ScheduleSlotResponse"
+    NoticeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        writerName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
