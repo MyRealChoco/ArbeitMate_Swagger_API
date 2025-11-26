@@ -7,6 +7,34 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  "/notifications/send":
+    post:
+      tags:
+      - notification-controller
+      operationId: sendTest
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: title
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: body
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
   "/companies/{companyId}/workers/{companyMemberId}/roles":
     post:
       tags:
@@ -1011,6 +1039,37 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/salary":
+    get:
+      tags:
+      - salary-controller
+      operationId: getMySalary
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: year
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SalaryResponse"
   "/companies/{companyId}/notices/{noticeId}":
     get:
       tags:
@@ -1792,6 +1851,50 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/ScheduleSlotResponse"
+    SalaryDetail:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+        endTime:
+          type: string
+        workMinutes:
+          type: integer
+          format: int32
+        dailySalary:
+          type: integer
+          format: int32
+    SalaryResponse:
+      type: object
+      properties:
+        year:
+          type: integer
+          format: int32
+        month:
+          type: integer
+          format: int32
+        hourlyWage:
+          type: integer
+          format: int32
+        totalMinutes:
+          type: integer
+          format: int32
+        baseSalary:
+          type: integer
+          format: int32
+        holidayAllowance:
+          type: integer
+          format: int32
+        totalSalary:
+          type: integer
+          format: int32
+        details:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SalaryDetail"
     NoticeResponse:
       type: object
       properties:
