@@ -1060,6 +1060,20 @@ paths:
             "*/*":
               schema:
                 type: string
+  "/companies/me":
+    get:
+      tags:
+      - company-controller
+      operationId: getMyCompanies
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/MyCompanyResponse"
   "/companies/{companyId}/workers/{companyMemberId}":
     delete:
       tags:
@@ -1792,3 +1806,17 @@ components:
         createdAt:
           type: string
           format: date-time
+    MyCompanyResponse:
+      type: object
+      properties:
+        companyId:
+          type: string
+          format: uuid
+        companyName:
+          type: string
+        role:
+          type: string
+          enum:
+          - OWNER
+          - MANAGER
+          - WORKER
