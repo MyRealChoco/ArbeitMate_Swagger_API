@@ -258,6 +258,27 @@ paths:
       responses:
         '200':
           description: OK
+  "/companies/{companyId}/schedule/{periodId}/open-availability":
+    post:
+      tags:
+      - schedule-controller
+      operationId: openSchedulePeriod
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
   "/companies/{companyId}/schedule/{periodId}/create/slots":
     post:
       tags:
@@ -985,6 +1006,27 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/SchedulePeriodWithSlotsResponse"
+  "/companies/{companyId}/schedule/periods/availability":
+    get:
+      tags:
+      - schedule-controller
+      operationId: listAvailabilityPeriodsForWorker
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/WorkerSchedulePeriodResponse"
   "/companies/{companyId}/schedule/periods-with-slots":
     get:
       tags:
@@ -1501,6 +1543,7 @@ components:
           type: string
           enum:
           - DRAFT
+          - OPEN
           - PUBLISHED
         availabilityDueAt:
           type: string
@@ -1840,6 +1883,7 @@ components:
           type: string
           enum:
           - DRAFT
+          - OPEN
           - PUBLISHED
         startDate:
           type: string
@@ -1851,6 +1895,34 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/ScheduleSlotResponse"
+    WorkerSchedulePeriodResponse:
+      type: object
+      properties:
+        periodId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        availabilityDueAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - OPEN
+          - PUBLISHED
+        submitted:
+          type: boolean
+        submittedAt:
+          type: string
+          format: date-time
     SalaryDetail:
       type: object
       properties:
