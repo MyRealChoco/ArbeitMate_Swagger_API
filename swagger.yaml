@@ -1161,6 +1161,46 @@ paths:
             "*/*":
               schema:
                 type: string
+  "/companies/{companyId}/me/roles":
+    get:
+      tags:
+      - company-controller
+      operationId: getMyRoles
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/CompanyRoleResponse"
+  "/companies/{companyId}/me/fixed-shift":
+    get:
+      tags:
+      - company-controller
+      operationId: getMyFixedShift
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/FixedShiftResponse"
   "/companies/me":
     get:
       tags:
@@ -1188,6 +1228,27 @@ paths:
           type: string
           format: uuid
       - name: companyMemberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+  "/companies/{companyId}/schedule/worker/delete-availability/{availabilityId}":
+    delete:
+      tags:
+      - schedule-controller
+      operationId: deleteMemberAvailabilityPattern
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: availabilityId
         in: path
         required: true
         schema:
