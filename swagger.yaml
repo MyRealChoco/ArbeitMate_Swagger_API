@@ -777,6 +777,21 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/MemberResponse"
+  "/notifications/{notificationId}/read":
+    patch:
+      tags:
+      - notification-controller
+      operationId: readNotification
+      parameters:
+      - name: notificationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
   "/members/me":
     get:
       tags:
@@ -845,6 +860,20 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/UpdateCompanyResponse"
+  "/notifications/me":
+    get:
+      tags:
+      - notification-controller
+      operationId: getMyNotifications
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/NotificationResponse"
   "/companies/{companyId}/workers":
     get:
       tags:
@@ -1081,6 +1110,25 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/ScheduleSlotResponse"
+  "/companies/{companyId}/schedule/assignments/{assignmentId}":
+    get:
+      tags:
+      - schedule-controller
+      operationId: getAssignmentDetail
+      parameters:
+      - name: assignmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ScheduleResponse"
   "/companies/{companyId}/salary":
     get:
       tags:
@@ -1798,6 +1846,23 @@ components:
           type: string
         address:
           type: string
+    NotificationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        read:
+          type: boolean
     CompanyWorkerResponse:
       type: object
       properties:
@@ -1984,6 +2049,45 @@ components:
         submittedAt:
           type: string
           format: date-time
+    AssignedWorker:
+      type: object
+      properties:
+        workerName:
+          type: string
+        memberId:
+          type: string
+          format: uuid
+        scheduleAssignmentId:
+          type: string
+          format: uuid
+    ScheduleResponse:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+          format: uuid
+        roleId:
+          type: string
+          format: uuid
+        roleName:
+          type: string
+        workDate:
+          type: string
+          format: date
+        startTime:
+          "$ref": "#/components/schemas/LocalTime"
+        endTime:
+          "$ref": "#/components/schemas/LocalTime"
+        requiredHeadCount:
+          type: integer
+          format: int32
+        currentHeadCount:
+          type: integer
+          format: int32
+        assignedWorkers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/AssignedWorker"
     SalaryDetail:
       type: object
       properties:
@@ -2000,6 +2104,9 @@ components:
         dailySalary:
           type: integer
           format: int32
+        scheduleAssignmentId:
+          type: string
+          format: uuid
     SalaryResponse:
       type: object
       properties:
@@ -2024,6 +2131,9 @@ components:
         totalSalary:
           type: integer
           format: int32
+        scheduleAssignmentId:
+          type: string
+          format: uuid
         details:
           type: array
           items:
